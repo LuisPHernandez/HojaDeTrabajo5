@@ -8,12 +8,6 @@ random.seed(42)
 
 # Se crea el ambiente de simulación
 env = simpy.Environment()
-
-# Variables y listas
-#CapacidadDeRam = 100 
-#VelCPU = 3
-#IntervalosDeLlegada = 10
-#CantProcesos = 25 
 MedicionTiempo = []
 
 #Cambios para solo ingresar los datos y que siga funcionando igual el programa
@@ -112,10 +106,4 @@ if MedicionTiempo:
     
     print("\nResultados:")
     print(f"Tiempo promedio cuando se ejecuta: {promedio:.2f}")
-<<<<<<< HEAD
     print(f"DesVest del proceso ejecutado: {desviacion:.2f}")
-=======
-    print(f"DesVest del proceso ejecutado: {desviacion:.2f}")
-
-
->>>>>>> f1255c73a3b046e3e34b9267fffc7ad3e4e176f6
