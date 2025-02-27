@@ -105,10 +105,4 @@ if MedicionTiempo:
     
     print("\nResultados:")
     print(f"Tiempo promedio cuando se ejecuta: {promedio:.2f}")
-<<<<<<< HEAD
     print(f"DesVest del proceso ejecutado: {desviacion:.2f}")
-=======
-    print(f"DesVest del proceso ejecutado: {desviacion:.2f}")
-
-
->>>>>>> f1255c73a3b046e3e34b9267fffc7ad3e4e176f6
