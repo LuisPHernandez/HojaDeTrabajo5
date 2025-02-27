@@ -3,6 +3,8 @@ import matplotlib.pyplot as graf
 #Función gráficas
 def gráfica(tiem1, tiem2, tiem3, tiem4, tiem5):
     fig, ax = graf.subplots()
+    ax.set_xlabel("Tiempo promedio")
+    ax.set_ylabel("Procesos")  
     ax.plot([tiem1, tiem2, tiem3, tiem4, tiem5], [25, 50, 100, 150, 200])
     graf.show()
 
