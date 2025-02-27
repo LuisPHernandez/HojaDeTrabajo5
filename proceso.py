@@ -1,7 +1,6 @@
 import random
 import simpy
 import statistics
-import matplotlib.pyplot as graf
 
 # Se crea la semilla de random
 random.seed(42)
@@ -83,12 +82,6 @@ def generador_procesos(env, RAM, CPU, intervalo, CantProcesos):
         memoriaUtil = random.randint(1, 10)
         cantidadInstrucciones = random.randint(1, 10)
         env.process(proceso(env, f'Proceso {proceso_id}', RAM, CPU, memoriaUtil, cantidadInstrucciones))
-
-#Función gráficas
-def gráfica(tiem1, tiem2, tiem3, tiem4, tiem5):
-    fig, ax = graf.subplots()
-    ax.plot([tiem1, tiem2, tiem3, tiem4, tiem5], [25, 50, 100, 150, 200])
-    graf.show()
 
 # Iniciar el generador de procesos
 env.process(generador_procesos(env, RAM, CPU, IntervalosDeLlegada, CantProcesos))
