@@ -1,6 +1,7 @@
 import random
 import simpy
 import statistics
+import matplotlib.pyplot as graf
 
 # Se crea la semilla de random
 random.seed(42)
@@ -9,11 +10,25 @@ random.seed(42)
 env = simpy.Environment()
 
 # Variables y listas
-CapacidadDeRam = 100 
-VelCPU = 3
-IntervalosDeLlegada = 10
-CantProcesos = 25 
+#CapacidadDeRam = 100 
+#VelCPU = 3
+#IntervalosDeLlegada = 10
+#CantProcesos = 25 
 MedicionTiempo = []
+
+#Cambios para solo ingresar los datos y que siga funcionando igual el programa
+print("Ingrese los siguientes datos de cantidades como enteros \nProcesos que desea trabajar:")
+CantProcesos = int(input())
+
+print("Intervalos:")
+IntervalosDeLlegada = int(input())
+
+print("Memoria:")
+CapacidadDeRam = int(input())
+
+print("Velocidad del CPU:")
+VelCPU = int(input())
+#
 
 # Se crean los recursos
 RAM = simpy.Container(env, init=CapacidadDeRam, capacity=CapacidadDeRam)
@@ -75,6 +90,12 @@ def generador_procesos(env, RAM, CPU, intervalo, CantProcesos):
         cantidadInstrucciones = random.randint(1, 10)
         env.process(proceso(env, f'Proceso {proceso_id}', RAM, CPU, memoriaUtil, cantidadInstrucciones))
 
+#Función gráficas
+def gráfica(tiem1, tiem2, tiem3, tiem4, tiem5):
+    fig, ax = graf.subplots()
+    ax.plot([tiem1, tiem2, tiem3, tiem4, tiem5], [25, 50, 100, 150, 200])
+    graf.show()
+
 # Iniciar el generador de procesos
 env.process(generador_procesos(env, RAM, CPU, IntervalosDeLlegada, CantProcesos))
 
@@ -91,4 +112,10 @@ if MedicionTiempo:
     
     print("\nResultados:")
     print(f"Tiempo promedio cuando se ejecuta: {promedio:.2f}")
+<<<<<<< HEAD
     print(f"DesVest del proceso ejecutado: {desviacion:.2f}")
+=======
+    print(f"DesVest del proceso ejecutado: {desviacion:.2f}")
+
+
+>>>>>>> f1255c73a3b046e3e34b9267fffc7ad3e4e176f6
