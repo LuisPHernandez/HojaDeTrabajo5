@@ -24,8 +24,8 @@ def proceso(env, name, RAM, CPU, memoriaUtil, cantidadInstrucciones):
     """Simula un proceso en el sistema"""
     
     # Registrar el tiempo de llegada
-    tiempo_inicio = env.now
-    print(f'{name} tiempo de llegada {tiempo_inicio}')
+    TiempoInicial = env.now
+    print(f'{name} tiempo de llegada {TiempoInicial}')
     
     # Estado new, espera por memoria
     yield RAM.get(memoriaUtil)
@@ -38,16 +38,16 @@ def proceso(env, name, RAM, CPU, memoriaUtil, cantidadInstrucciones):
             print(f'{name} Se empieza a ejecutar {env.now}')
             
             # ejecuta hasta VelCPU
-            instrucciones_ejecutadas = min(VelCPU, cantidadInstrucciones)
+            ejecucionDeIstrucciones = min(VelCPU, cantidadInstrucciones)
             yield env.timeout(1) 
-            cantidadInstrucciones -= instrucciones_ejecutadas
-            print(f'{name} ejecuta {instrucciones_ejecutadas} instrucciones, le quedan {cantidadInstrucciones} en tiempo {env.now}')
+            cantidadInstrucciones -= ejecucionDeIstrucciones
+            print(f'{name} ejecuta {ejecucionDeIstrucciones} instrucciones, le quedan {cantidadInstrucciones} en tiempo {env.now}')
             
             if cantidadInstrucciones == 0:
                 #Registrar el tiempo de finalización
-                tiempo_fin = env.now
-                tiempo_total = tiempo_fin - tiempo_inicio
-                MedicionTiempo.append(tiempo_total) 
+                tiempoFinal = env.now
+                tiempoTotal = tiempoFinal - TiempoInicial
+                MedicionTiempo.append(tiempoTotal) 
                 
                 # Estado final o terminado
                 print(f'{name} termina en tiempo {env.now}')
@@ -85,7 +85,7 @@ env.run()
 env.run()
 
 # Calcular estadísticas después de la simulación
-if MedicionTiempo:  # Verificar que haya datos
+if MedicionTiempo:
     promedio = sum(MedicionTiempo) / len(MedicionTiempo)
     desviacion = statistics.stdev(MedicionTiempo) if len(MedicionTiempo) > 1 else 0 
     
