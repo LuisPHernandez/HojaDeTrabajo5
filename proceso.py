@@ -1,5 +1,6 @@
 import random
 import simpy
+import statistics
 
 # Se crea la semilla de random
 random.seed(42)
@@ -7,67 +8,87 @@ random.seed(42)
 # Se crea el ambiente de simulación
 env = simpy.Environment()
 
-# Variables globales
-RAM_CAPACITY = 100 
-CPU_SPEED = 3
-INTERVALO_LLEGADA = 10
-NUM_PROCESOS = 25 
+# Variables y listas
+CapacidadDeRam = 100 
+VelCPU = 3
+IntervalosDeLlegada = 10
+CantProcesos = 25 
+MedicionTiempo = []
 
 # Se crean los recursos
-RAM = simpy.Container(env, init=RAM_CAPACITY, capacity=RAM_CAPACITY)
+RAM = simpy.Container(env, init=CapacidadDeRam, capacity=CapacidadDeRam)
 CPU = simpy.Resource(env, capacity=1)
 
 # Se define la función que simula el camino de un proceso
-def proceso(env, name, RAM, CPU, memoria_necesaria, instrucciones_totales):
-    # Estado new
-    print(f'{name} llega al sistema en tiempo {env.now}')
+def proceso(env, name, RAM, CPU, memoriaUtil, cantidadInstrucciones):
+    """Simula un proceso en el sistema"""
     
-    yield RAM.get(memoria_necesaria)
-    print(f'{name} obtiene {memoria_necesaria} unidades de memoria en tiempo {env.now}')
+    # Registrar el tiempo de llegada
+    tiempo_inicio = env.now
+    print(f'{name} tiempo de llegada {tiempo_inicio}')
     
-    # Estado ready
-    while instrucciones_totales > 0:
+    # Estado new, espera por memoria
+    yield RAM.get(memoriaUtil)
+    print(f'{name} obtiene {memoriaUtil} unidades de memoria {env.now}')
+    
+    # Estado ready, espera por CPU
+    while cantidadInstrucciones > 0:
         with CPU.request() as req:
-            yield req
-            print(f'{name} comienza a ejecutarse en tiempo {env.now}')
+            yield req  # Esperar turno en CPU
+            print(f'{name} Se empieza a ejecutar {env.now}')
             
-            # Estado running
-            instrucciones_ejecutadas = min(CPU_SPEED, instrucciones_totales)
+            # ejecuta hasta VelCPU
+            instrucciones_ejecutadas = min(VelCPU, cantidadInstrucciones)
             yield env.timeout(1) 
-            instrucciones_totales -= instrucciones_ejecutadas
-            print(f'{name} ejecuta {instrucciones_ejecutadas} instrucciones, le quedan {instrucciones_totales} en tiempo {env.now}')
+            cantidadInstrucciones -= instrucciones_ejecutadas
+            print(f'{name} ejecuta {instrucciones_ejecutadas} instrucciones, le quedan {cantidadInstrucciones} en tiempo {env.now}')
             
-            if instrucciones_totales == 0:
-                # Estado terminated
+            if cantidadInstrucciones == 0:
+                #Registrar el tiempo de finalización
+                tiempo_fin = env.now
+                tiempo_total = tiempo_fin - tiempo_inicio
+                MedicionTiempo.append(tiempo_total) 
+                
+                # Estado final o terminado
                 print(f'{name} termina en tiempo {env.now}')
-                yield RAM.put(memoria_necesaria)
-                print(f'{name} libera {memoria_necesaria} unidades de memoria en tiempo {env.now}')
+                yield RAM.put(memoriaUtil)  
+                print(f'{name} libera {memoriaUtil} unidades de memoria en tiempo {env.now}')
                 break
             else:
-                # Decidir si va a waiting o ready
-                if random.randint(1, 2) == 1:
-                    # Estado waiting
+                # Estado waiting o listo
+                if random.randint(1, 2) == 1: 
                     print(f'{name} va a estado waiting en tiempo {env.now}')
-                    yield env.timeout(random.randint(1, 2))
+                    yield env.timeout(random.randint(1, 2))  
                     print(f'{name} regresa a estado ready en tiempo {env.now}')
                 else:
-                    # Estado ready
                     print(f'{name} regresa a estado ready en tiempo {env.now}')
 
 # Se define la función que genera los procesos
-def generador_procesos(env, RAM, CPU, intervalo, num_procesos):
+def generador_procesos(env, RAM, CPU, intervalo, CantProcesos):
     proceso_id = 0
-    while proceso_id < num_procesos:
+    while proceso_id < CantProcesos:
         yield env.timeout(random.expovariate(1.0 / intervalo))
         
         # Generar un nuevo proceso
         proceso_id += 1
-        memoria_necesaria = random.randint(1, 10)
-        instrucciones_totales = random.randint(1, 10)
-        env.process(proceso(env, f'Proceso {proceso_id}', RAM, CPU, memoria_necesaria, instrucciones_totales))
+        memoriaUtil = random.randint(1, 10)
+        cantidadInstrucciones = random.randint(1, 10)
+        env.process(proceso(env, f'Proceso {proceso_id}', RAM, CPU, memoriaUtil, cantidadInstrucciones))
 
 # Iniciar el generador de procesos
-env.process(generador_procesos(env, RAM, CPU, INTERVALO_LLEGADA, NUM_PROCESOS))
+env.process(generador_procesos(env, RAM, CPU, IntervalosDeLlegada, CantProcesos))
 
 # Ejecutar la simulación
 env.run()
+
+# Ejecutar la simulación
+env.run()
+
+# Calcular estadísticas después de la simulación
+if MedicionTiempo:  # Verificar que haya datos
+    promedio = sum(MedicionTiempo) / len(MedicionTiempo)
+    desviacion = statistics.stdev(MedicionTiempo) if len(MedicionTiempo) > 1 else 0 
+    
+    print("\nResultados:")
+    print(f"Tiempo promedio cuando se ejecuta: {promedio:.2f}")
+    print(f"DesVest del proceso ejecutado: {desviacion:.2f}")
