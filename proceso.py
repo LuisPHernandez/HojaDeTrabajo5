@@ -21,11 +21,10 @@ CapacidadDeRam = int(input())
 
 print("Velocidad del CPU:")
 VelCPU = int(input())
-#
 
 # Se crean los recursos
 RAM = simpy.Container(env, init=CapacidadDeRam, capacity=CapacidadDeRam)
-CPU = simpy.Resource(env, capacity=1)
+CPU = simpy.Resource(env, capacity=2)
 
 # Se define la función que simula el camino de un proceso
 def proceso(env, name, RAM, CPU, memoriaUtil, cantidadInstrucciones):
@@ -86,13 +85,13 @@ def generador_procesos(env, RAM, CPU, intervalo, CantProcesos):
 # Iniciar el generador de procesos
 env.process(generador_procesos(env, RAM, CPU, IntervalosDeLlegada, CantProcesos))
 
-# Ejecutar la simulación
+# Ejecutar la simulacion
 env.run()
 
-# Ejecutar la simulación
-env.run()
+# Ejecutar la simulacion
+#env.run()
 
-# Calcular estadísticas después de la simulación
+# Calcular estadísticas despues de la simulacion
 if MedicionTiempo:
     promedio = sum(MedicionTiempo) / len(MedicionTiempo)
     desviacion = statistics.stdev(MedicionTiempo) if len(MedicionTiempo) > 1 else 0 
