@@ -44,7 +44,7 @@ elif op == 2:
 
 elif op == 3:
     #valores predeterminados
-    gráfica(29.33, 61.87, 114.45, 168.16, 213.36)
+    #gráfica(29.33, 61.87, 114.45, 168.16, 213.36)
 
     #al incrementar la memoria a 200
     #gráfica(29.69, 69.28, 134.41, 192.44, 247.49)
@@ -53,7 +53,7 @@ elif op == 3:
     #gráfica(11.47, 24.11, 45.66, 62.02, 78.34)
 
     #al incrementar a 2 procesadores
-    #gráfica(10.52, 14.75, 28.10, 41.67, 55.74)
+    gráfica(10.52, 14.75, 28.10, 41.67, 55.74)
 
 else:
     print("Opción ingresada no es válida...")
