@@ -1,3 +1,11 @@
+#------------------------------------
+# Pedro Caso
+# Luis Hernandez
+# Tiffany Salazar 
+# HDT5
+# Algoritmos y Estructura de datos
+# ----------------------------------- 
+
 import random
 import simpy
 import statistics
